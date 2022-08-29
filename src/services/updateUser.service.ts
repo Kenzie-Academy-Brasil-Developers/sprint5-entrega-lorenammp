@@ -13,9 +13,17 @@ const UserUpdateService = async (id: string, data: IUser) => {
 
   userRepository.merge(user, data);
 
+  const updatedDate = new Date();
+
+  user.updated_at = updatedDate;
+
   await userRepository.save(user);
 
-  return user;
+  const updatedUser = { ...user };
+
+  delete updatedUser.password;
+
+  return updatedUser;
 };
 
 export default UserUpdateService;

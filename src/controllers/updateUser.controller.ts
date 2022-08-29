@@ -11,7 +11,7 @@ const UserUpdateController = async (req: Request, res: Response) => {
     return res.status(201).send(updatedUser);
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(400).send({
+      return res.status(404).send({
         error: error.name,
         message: error.message,
       });
