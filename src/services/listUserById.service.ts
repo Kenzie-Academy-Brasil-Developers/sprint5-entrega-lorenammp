@@ -1,6 +1,9 @@
-import { users } from "../database";
+import { User } from "../entities/user.entity";
+import { AppDataSource } from "../data-source";
 
-const ListUserByIdService = (id: string) => {
+const ListUserByIdService = async (id: string) => {
+  const userRepository = AppDataSource.getRepository(User);
+  const users = await userRepository.find();
   const foundUser = users.find((user) => user.id === id);
 
   if (!foundUser) {

@@ -1,8 +1,15 @@
-import { users } from "../database";
-import { IUserRegister, IUser } from "../interfaces/users";
-import { v4 as uuidv4 } from "uuid";
+import { User } from "../entities/user.entity";
+import { IUserRegister } from "../interfaces/users";
+import { AppDataSource } from "../data-source";
 
-const UserCreateService = ({ name, email, age, password }: IUserRegister) => {
+const UserCreateService = async ({
+  name,
+  email,
+  age,
+  password,
+}: IUserRegister) => {
+  const userRepository = AppDataSource.getRepository(User);
+  const users = await userRepository.find();
   const checkEmail = users.find((user) => user.email === email);
 
   if (checkEmail) {
@@ -11,19 +18,20 @@ const UserCreateService = ({ name, email, age, password }: IUserRegister) => {
 
   const todayDate = new Date();
 
-  const newUser: IUser = {
-    id: uuidv4(),
-    name,
-    email,
-    password,
-    age,
-    created_at: todayDate,
-    updated_at: todayDate,
-  };
+  const user = new User();
 
-  users.push(newUser);
+  user.name = name;
+  user.email = email;
+  user.password = password;
+  user.age = age;
+  user.created_at = todayDate;
+  user.updated_at = todayDate;
 
-  return newUser;
+  userRepository.create(user);
+
+  await userRepository.save(user);
+
+  return user;
 };
 
 export default UserCreateService;

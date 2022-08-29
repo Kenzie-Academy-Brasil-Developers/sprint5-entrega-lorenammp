@@ -2,9 +2,9 @@ import exp from "constants";
 import { Request, Response } from "express";
 import UsersListService from "../services/listUser.service";
 
-const UserListController = (req: Request, res: Response) => {
+const UserListController = async (req: Request, res: Response) => {
   try {
-    const userList = UsersListService();
+    const userList = await UsersListService();
 
     return res.status(201).send(userList);
   } catch (error) {

@@ -1,18 +1,21 @@
-import { users } from "../database";
+import { User } from "../entities/user.entity";
+import { AppDataSource } from "../data-source";
 import { IUser } from "../interfaces/users";
 
-const UserUpdateService = (id: string, data: IUser) => {
-  const userIndex = users.findIndex((user) => user.id === id);
+const UserUpdateService = async (id: string, data: IUser) => {
+  const userRepository = AppDataSource.getRepository(User);
+  const users = await userRepository.find();
+  const user = users.find((user) => user.id === id);
 
-  if (userIndex === -1) {
+  if (!user) {
     throw new Error("User not found");
   }
 
-  const updatedDate = new Date();
-  users[userIndex] = { ...users[userIndex], ...data };
-  users[userIndex].updated_at = updatedDate;
+  userRepository.merge(user, data);
 
-  return users[userIndex];
+  await userRepository.save(user);
+
+  return user;
 };
 
 export default UserUpdateService;

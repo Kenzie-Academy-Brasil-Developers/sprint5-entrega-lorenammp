@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import ListUserByIdService from "../services/listUserById.service";
 
-const ListUserByIdController = (req: Request, res: Response) => {
+const ListUserByIdController = async (req: Request, res: Response) => {
   try {
     const id = req.params;
 
-    const user = ListUserByIdService(id.id);
+    const user = await ListUserByIdService(id.id);
 
     return res.status(201).send(user);
   } catch (error) {

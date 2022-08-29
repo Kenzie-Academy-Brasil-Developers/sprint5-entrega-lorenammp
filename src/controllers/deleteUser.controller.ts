@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import UserDeleteService from "../services/deleteUser.service";
 
-const UserDeleteController = (req: Request, res: Response) => {
+const UserDeleteController = async (req: Request, res: Response) => {
   try {
     const id = req.params;
 
-    const deleted = UserDeleteService(id.id);
+    const deleted = await UserDeleteService(id.id);
 
     return res.status(201).send(deleted);
   } catch (error) {

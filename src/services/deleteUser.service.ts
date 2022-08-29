@@ -1,13 +1,16 @@
-import { users } from "../database";
+import { User } from "../entities/user.entity";
+import { AppDataSource } from "../data-source";
 
-const UserDeleteService = (id: string) => {
-  const userIndex = users.findIndex((user) => user.id === id);
+const UserDeleteService = async (id: string) => {
+  const userRepository = AppDataSource.getRepository(User);
+  const users = await userRepository.find();
+  const user = users.find((user) => user.id === id);
 
-  if (userIndex === -1) {
+  if (!user) {
     throw new Error("User not found");
   }
 
-  users.splice(userIndex, 1);
+  await userRepository.delete(user!.id);
 
   return "User deleted with success!";
 };
